@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebGL Rendering</title>
+</head>
+<body>
+    <canvas id="myCanvas" width="400" height="400" style="background: red;"></canvas>
+    <button onclick="renderTriangle()">Render Triangle</button>
+
+    <script>
+        let worker = new Worker('worker.js');
+        const canvas = document.getElementById('myCanvas');
+        console.log("Worker is",worker);
+
+        const offscreen = canvas.transferControlToOffscreen();
+
+        worker.postMessage({ type: 'init' , canvas: offscreen},[offscreen]);
+
+        function renderTriangle() {
+            // Send message to worker thread to initiate rendering
+            worker.postMessage({ type: 'render' });
+        }
+    </script>
+</body>
+</html>
